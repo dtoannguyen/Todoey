@@ -12,7 +12,7 @@ class ToDoListViewController: UITableViewController {
     
     //TODO: Declare Properties
     
-    let itemArray = ["Find Mike", "Buy Eggs", "Eat"]
+    var itemArray = ["Find Mike", "Buy Eggs", "Eat"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +40,29 @@ class ToDoListViewController: UITableViewController {
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    //MARK: Add new items to list
+    @IBAction func addButtonPresed(_ sender: UIBarButtonItem) {
+        var textfield = UITextField()
+        
+        //"Declare" PopUp
+        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
+        //"Declare" Button and Add Textfield Input to List
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            self.itemArray.append(textfield.text!)
+            self.tableView.reloadData()
+            print(textfield.text!)
+        }
+        //Textfield
+        alert.addTextField { (alertTextfield) in
+            alertTextfield.placeholder = "Create new item"
+            textfield = alertTextfield
+        }
+        //Add Button to PopUp
+        alert.addAction(action)
+        //"Init" PopUp with Button
+        present(alert, animated: true, completion: nil)
     }
 }
 
