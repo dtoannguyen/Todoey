@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class ToDoListViewController: UITableViewController {
     
     //TODO: Declare Properties
@@ -15,15 +16,29 @@ class ToDoListViewController: UITableViewController {
     //UserDefaults: An interface to the user’s defaults database, where you store key-value pairs persistently across launches of your app, allowing an app to customize its behavior to match a user’s preferences.
 
     let userDefault = UserDefaults.standard
-    var itemArray = ["Find Mike", "Buy Eggs", "Eat"]
+    var itemArray = [Item]()
+    let newItem = Item()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         //Load saved .plist
-        if let items = userDefault.array(forKey: "ToDoListArray") as? [String] {
+
+        // Do any additional setup after loading the view, typically from a nib.
+        let newItem = Item()
+        newItem.title = "Find Mike"
+        itemArray.append(newItem)
+        
+        let newItem2 = Item()
+        newItem2.title = "Buy Eggs"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "Eat"
+        itemArray.append(newItem3)
+        
+        if let items = userDefault.array(forKey: "ToDoListArray") as? [Item] {
             itemArray = items
         }
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     //MARK: TableView Datasource Methods
@@ -33,20 +48,27 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        cell.textLabel?.text = item.title
 //      cell.textLabel?.font = UIFont(name: "HelveticaNeue-Regular", size: 17)
+        /*Shorter Way by Using Ternary Operator for:
+        if item.done == true {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }*/
+        //Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
+        cell.accessoryType = item.done ? .checkmark : .none
         return cell
     }
+    
+    
     
     //MARK: TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-        
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -58,7 +80,9 @@ class ToDoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         //"Declare" Button and Add Textfield Input to List
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            self.itemArray.append(textfield.text!)
+            let newItem = Item()
+            newItem.title = textfield.text!
+            self.itemArray.append(newItem)
             //Save itemArray to .plist with Key
             self.userDefault.set(self.itemArray, forKey: "ToDoListArray")
             self.tableView.reloadData()
