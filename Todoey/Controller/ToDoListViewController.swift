@@ -17,28 +17,25 @@ class ToDoListViewController: UITableViewController {
 
     let userDefault = UserDefaults.standard
     var itemArray = [Item]()
-    let newItem = Item()
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Load saved .plist
-
+        print(dataFilePath)
         // Do any additional setup after loading the view, typically from a nib.
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
         
-        let newItem2 = Item()
-        newItem2.title = "Buy Eggs"
-        itemArray.append(newItem2)
+        let item1 = Item()
+        item1.title = "Eat"
+        itemArray.append(item1)
         
-        let newItem3 = Item()
-        newItem3.title = "Eat"
-        itemArray.append(newItem3)
+        let item2 = Item()
+        item2.title = "Take a shit"
+        itemArray.append(item2)
         
-        if let items = userDefault.array(forKey: "ToDoListArray") as? [Item] {
-            itemArray = items
-        }
+        loadItems()
+        
     }
 
     //MARK: TableView Datasource Methods
@@ -59,20 +56,21 @@ class ToDoListViewController: UITableViewController {
         }*/
         //Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
         cell.accessoryType = item.done ? .checkmark : .none
+        saveItems()
         return cell
     }
     
     
     
-    //MARK: TableView Delegate Methods
+    //MARK: TableView Delegate Methods / DidSelectRow
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        tableView.reloadData()
+        saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    //MARK: Add new items to list
+    //MARK: Add new items to itemArray
     @IBAction func addButtonPresed(_ sender: UIBarButtonItem) {
         var textfield = UITextField()
         
@@ -83,9 +81,7 @@ class ToDoListViewController: UITableViewController {
             let newItem = Item()
             newItem.title = textfield.text!
             self.itemArray.append(newItem)
-            //Save itemArray to .plist with Key
-            self.userDefault.set(self.itemArray, forKey: "ToDoListArray")
-            self.tableView.reloadData()
+            self.saveItems()
             print(textfield.text!)
         }
         //Textfield
@@ -97,6 +93,32 @@ class ToDoListViewController: UITableViewController {
         alert.addAction(action)
         //"Init" PopUp with Button
         present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: Model Manipulation Methods
+    
+    //Save itemArray to Items.plist Using Encoding (NSCoder) and reload tableView
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding items \(error)")
+        }
+        self.tableView.reloadData()
+    }
+    
+    //Load items
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+            itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding items: \(error)")
+            }
+        }
     }
 }
 
