@@ -26,14 +26,6 @@ class ToDoListViewController: UITableViewController {
         print(dataFilePath)
         // Do any additional setup after loading the view, typically from a nib.
         
-        let item1 = Item()
-        item1.title = "Eat"
-        itemArray.append(item1)
-        
-        let item2 = Item()
-        item2.title = "Take a shit"
-        itemArray.append(item2)
-        
         loadItems()
         
     }
@@ -56,7 +48,6 @@ class ToDoListViewController: UITableViewController {
         }*/
         //Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
         cell.accessoryType = item.done ? .checkmark : .none
-        saveItems()
         return cell
     }
     
