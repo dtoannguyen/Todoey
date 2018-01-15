@@ -91,10 +91,10 @@
 		E8611FCE2003FB0F0043D7F7 /* Todoey */ = {
 			isa = PBXGroup;
 			children = (
-				E8138810200508160071E43D /* Supporting Files */,
-				E813880D200507A80071E43D /* Data Model */,
 				E813880F200507FF0071E43D /* Controller */,
+				E813880D200507A80071E43D /* Data Model */,
 				E813880E200507E10071E43D /* View */,
+				E8138810200508160071E43D /* Supporting Files */,
 			);
 			path = Todoey;
 			sourceTree = "<group>";

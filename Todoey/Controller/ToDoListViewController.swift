@@ -11,23 +11,22 @@ import CoreData
 
 class ToDoListViewController: UITableViewController {
     
-    //TODO: Declare Properties
+    //MARK: - Declare Properties
     
+    @IBOutlet weak var searchBar: UISearchBar!
     var itemArray = [Item]()
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         print(dataFilePath)
         // Do any additional setup after loading the view, typically from a nib.
-        
+        searchBar.delegate = self
         loadItems()
-        
     }
 
-    //MARK: TableView Datasource Methods
+    //MARK: - TableView Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
@@ -42,7 +41,7 @@ class ToDoListViewController: UITableViewController {
         return cell
     }
     
-    //MARK: TableView Delegate Methods / DidSelectRow
+    //MARK: - TableView Delegate Methods / DidSelectRow
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
@@ -50,7 +49,7 @@ class ToDoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    //MARK: Add new items to itemArray
+    //MARK: - Add new items to itemArray
     @IBAction func addButtonPresed(_ sender: UIBarButtonItem) {
         var textfield = UITextField()
         
@@ -78,7 +77,7 @@ class ToDoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    //MARK: Model Manipulation Methods
+    //MARK: - Model Manipulation Methods
     
     //Save itemArray to CoreData and reload tableView
     func saveItems() {
@@ -91,12 +90,53 @@ class ToDoListViewController: UITableViewController {
     }
     
     //Load items
-    func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
             itemArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context: \(error)")
+        }
+        tableView.reloadData()
+    }
+    
+}
+
+//MARK: - Searchbar Delegate Methods
+
+extension ToDoListViewController: UISearchBarDelegate {
+    
+    //TODO: - Add Cancel Button to Search Bar
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.setShowsCancelButton(false, animated: true)
+        loadItems()
+        DispatchQueue.main.async {
+            searchBar.resignFirstResponder()
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if let searchInputLength = searchBar.text?.count {
+            if searchInputLength == 0 {
+                loadItems()
+                //Searchbar should no longer be the thing that is currently selected
+                DispatchQueue.main.async {
+                    searchBar.resignFirstResponder()
+                }
+            } else {
+                let request: NSFetchRequest<Item> = Item.fetchRequest()
+                request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+                //let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+                //request.sortDescriptors = [sortDescriptor]
+                //request.sortDescriptors is plural and needs to be an array of NSSortDescriptor
+                request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+                print(searchBar.text!)
+                loadItems(with: request)
+            }
         }
     }
     
