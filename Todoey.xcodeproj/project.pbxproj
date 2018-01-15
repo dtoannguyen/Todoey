@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E85C3AB5200A8FAA00546D18 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E85C3AB3200A8FAA00546D18 /* DataModel.xcdatamodeld */; };
+		E85C3AB7200D150E00546D18 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85C3AB6200D150E00546D18 /* CategoryViewController.swift */; };
 		E8611FD02003FB0F0043D7F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8611FCF2003FB0F0043D7F7 /* AppDelegate.swift */; };
 		E8611FD22003FB0F0043D7F7 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8611FD12003FB0F0043D7F7 /* ToDoListViewController.swift */; };
 		E8611FD52003FB0F0043D7F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8611FD32003FB0F0043D7F7 /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		E85C3AB4200A8FAA00546D18 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		E85C3AB6200D150E00546D18 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		E8611FCC2003FB0F0043D7F7 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8611FCF2003FB0F0043D7F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E8611FD12003FB0F0043D7F7 /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 		E813880F200507FF0071E43D /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				E85C3AB6200D150E00546D18 /* CategoryViewController.swift */,
 				E8611FD12003FB0F0043D7F7 /* ToDoListViewController.swift */,
 			);
 			path = Controller;
@@ -173,6 +176,7 @@
 			files = (
 				E8611FD22003FB0F0043D7F7 /* ToDoListViewController.swift in Sources */,
 				E85C3AB5200A8FAA00546D18 /* DataModel.xcdatamodeld in Sources */,
+				E85C3AB7200D150E00546D18 /* CategoryViewController.swift in Sources */,
 				E8611FD02003FB0F0043D7F7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

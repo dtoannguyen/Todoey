@@ -26,7 +26,7 @@ class ToDoListViewController: UITableViewController {
         loadItems()
     }
 
-    //MARK: - TableView Datasource Methods
+    //MARK: - TableView Datasource Methods / numberOfRowsInSelection, cellForRow
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
@@ -105,7 +105,7 @@ class ToDoListViewController: UITableViewController {
 
 extension ToDoListViewController: UISearchBarDelegate {
     
-    //TODO: - Add Cancel Button to Search Bar
+    //Add Cancel Button to Search Bar
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
