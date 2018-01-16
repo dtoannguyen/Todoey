@@ -18,6 +18,7 @@ class ToDoListViewController: UITableViewController {
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var selectedCategory: Category? {
+        // if selectedCategory gets set then loadItems()
         didSet {
             loadItems()
         }
@@ -99,6 +100,7 @@ class ToDoListViewController: UITableViewController {
     func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
         let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
         if let additionalPredicate = predicate {
+            //If there is another predicate (filter) then combine these filters in a compount predicate
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
         } else {
             request.predicate = categoryPredicate
