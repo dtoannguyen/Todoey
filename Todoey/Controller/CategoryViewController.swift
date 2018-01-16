@@ -33,7 +33,7 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = categoryArray[indexPath.row].attribute
+        cell.textLabel?.text = categoryArray[indexPath.row].name
         cell.accessoryType = .disclosureIndicator
         return cell
     }
@@ -41,7 +41,15 @@ class CategoryViewController: UITableViewController {
     // MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //
+        performSegue(withIdentifier: "goToItems", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! ToDoListViewController
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = categoryArray[indexPath.row]
+        }
+        
     }
     
     // MARK: - Add new categories to list
@@ -52,7 +60,7 @@ class CategoryViewController: UITableViewController {
         let alert = UIAlertController(title: "Add a new category", message: "Please type in your new category", preferredStyle: .alert)
         
         let createNewCategory = UIAlertAction(title: "Add", style: .default) { (button) in
-            category.attribute = textfield.text!
+            category.name = textfield.text!
             self.categoryArray.append(category)
             print(category)
             self.saveCategory()

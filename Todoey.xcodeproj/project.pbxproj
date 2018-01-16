@@ -26,6 +26,7 @@
 		E8611FD62003FB0F0043D7F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E8611FD92003FB0F0043D7F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E8611FDB2003FB0F0043D7F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8E21B70200D81F6003EE6B5 /* DataModel v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "DataModel v2.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -367,9 +368,10 @@
 		E85C3AB3200A8FAA00546D18 /* DataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				E8E21B70200D81F6003EE6B5 /* DataModel v2.xcdatamodel */,
 				E85C3AB4200A8FAA00546D18 /* DataModel.xcdatamodel */,
 			);
-			currentVersion = E85C3AB4200A8FAA00546D18 /* DataModel.xcdatamodel */;
+			currentVersion = E8E21B70200D81F6003EE6B5 /* DataModel v2.xcdatamodel */;
 			path = DataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
