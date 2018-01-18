@@ -111,7 +111,7 @@ class ToDoListViewController: UITableViewController {
 
     //Load items
     func loadItems() {
-        toDoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        toDoItems = selectedCategory?.items.sorted(byKeyPath: "dateAdded", ascending: true)
         tableView.reloadData()
     }
 
