@@ -20,8 +20,10 @@ class CategoryViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         loadCategory()
+        tableView.rowHeight = 80.0
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
 
     // MARK: - TableView DataSource Methods
@@ -62,6 +64,28 @@ class CategoryViewController: UITableViewController {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
+    
+    // MARK: - Swipe Cell Methods
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+
+            if let category = self.categories?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        self.realm.delete(category)
+                    }
+                    print("Category deleted")
+                    completionHandler(true)
+                    self.tableView.reloadData()
+                } catch {
+                    print("Could not delete category")
+                }
+            }
+        }
+//        delete.image = UIImage(named: "trash-icon")
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
     
     // MARK: - Add new categories to list
     

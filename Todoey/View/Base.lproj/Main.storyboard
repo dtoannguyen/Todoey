@@ -76,7 +76,7 @@
                             <outlet property="delegate" destination="uuY-fs-e1m" id="6l6-5T-gzt"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoey" id="A9o-mv-WQk">
+                    <navigationItem key="navigationItem" title="Todoey" largeTitleDisplayMode="always" id="A9o-mv-WQk">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="MbS-qo-RoJ">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>

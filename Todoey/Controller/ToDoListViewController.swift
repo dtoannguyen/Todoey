@@ -27,6 +27,8 @@ class ToDoListViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         searchBar.delegate = self
+        tableView.rowHeight = 80.0
+        navigationItem.largeTitleDisplayMode = .never
     }
 
     //MARK: - TableView Datasource Methods / numberOfRowsInSelection, cellForRow
@@ -54,6 +56,26 @@ class ToDoListViewController: UITableViewController {
         return cell
     }
         
+    //MARK: - Swipe Cell Methods
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+            
+            if let item = self.toDoItems?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        self.realm.delete(item)
+                    }
+                    print("Item deleted")
+                    completionHandler(true)
+                    self.tableView.reloadData()
+                } catch {
+                    print("Could not delete item")
+                }
+            }
+        }
+        delete.image = UIImage(named: "trash-icon")
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
     
     //MARK: - TableView Delegate Methods / DidSelectRow
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
