@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 class CategoryViewController: UITableViewController {
     
@@ -20,7 +21,9 @@ class CategoryViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewDidLoad 1 is called")
         loadCategory()
+        print("viewDidLoad 2 is called")
         tableView.rowHeight = 80.0
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
@@ -29,6 +32,7 @@ class CategoryViewController: UITableViewController {
     // MARK: - TableView DataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("numberOfRows Method is called")
         //Nil Coalescing Operator: if value = nil then change value to 1
         var rows = categories?.count ?? 1
         if categories?.isEmpty == true {
@@ -38,7 +42,9 @@ class CategoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        print("cellForRow Method is called")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
         if categories?.isEmpty == true {
             cell.textLabel?.text = "No categories added yet."
         } else {
@@ -64,28 +70,6 @@ class CategoryViewController: UITableViewController {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
-    
-    // MARK: - Swipe Cell Methods
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-
-            if let category = self.categories?[indexPath.row] {
-                do {
-                    try self.realm.write {
-                        self.realm.delete(category)
-                    }
-                    print("Category deleted")
-                    completionHandler(true)
-                    self.tableView.reloadData()
-                } catch {
-                    print("Could not delete category")
-                }
-            }
-        }
-//        delete.image = UIImage(named: "trash-icon")
-        return UISwipeActionsConfiguration(actions: [delete])
-    }
-    
     
     // MARK: - Add new categories to list
     
@@ -125,8 +109,59 @@ class CategoryViewController: UITableViewController {
     }
     
     func loadCategory() {
+        print("Loading Categories from realm")
         categories = realm.objects(Category.self)
         tableView.reloadData()
     }
     
+}
+
+// MARK: - SwipeCellKit Methods
+extension CategoryViewController: SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
+        print("editActionsOptions Method is called")
+        var options = SwipeTableOptions()
+        options.expansionStyle = .destructive(automaticallyDelete: false)
+        return options
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        print("editActions Method is called")
+        guard orientation == .right else { return nil }
+        
+
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            // Update model
+            if self.categories?.isEmpty == true {
+                print("categories are already empty")
+                self.tableView.beginUpdates()
+                action.fulfill(with: .reset)
+                self.tableView.endUpdates()
+            } else {
+                if let category = self.categories?[indexPath.row] {
+                    do {
+                        print("\(category.name) deleted")
+                        try self.realm.write {
+                            self.realm.delete(category)
+                        }
+                    } catch {
+                        print("Could not delete category")
+                    }
+
+                    // Coordinate table view update animations
+                    self.tableView.beginUpdates()
+                    if self.categories?.isEmpty == true {
+                        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .right)
+                    }
+                    action.fulfill(with: .delete)
+                    self.tableView.endUpdates()
+                }
+            }
+        }
+        deleteAction.image = UIImage(named: "trash-icon")
+        return [deleteAction]
+    }
+    
+
 }
