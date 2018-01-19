@@ -16,6 +16,7 @@
 		E8611FDA2003FB0F0043D7F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8611FD82003FB0F0043D7F7 /* LaunchScreen.storyboard */; };
 		E8E21B74200E4C19003EE6B5 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E21B73200E4C19003EE6B5 /* Item.swift */; };
 		E8E21B76200E4C27003EE6B5 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E21B75200E4C27003EE6B5 /* Category.swift */; };
+		E8E21B7A2011F0CA003EE6B5 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8E21B792011F0CA003EE6B5 /* SwipeTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		E8611FDB2003FB0F0043D7F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E8E21B73200E4C19003EE6B5 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		E8E21B75200E4C27003EE6B5 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		E8E21B792011F0CA003EE6B5 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				E85C3AB6200D150E00546D18 /* CategoryViewController.swift */,
+				E8E21B792011F0CA003EE6B5 /* SwipeTableViewController.swift */,
 				E8611FD12003FB0F0043D7F7 /* ToDoListViewController.swift */,
 			);
 			path = Controller;
@@ -266,6 +269,7 @@
 				E8611FD22003FB0F0043D7F7 /* ToDoListViewController.swift in Sources */,
 				E85C3AB7200D150E00546D18 /* CategoryViewController.swift in Sources */,
 				E8611FD02003FB0F0043D7F7 /* AppDelegate.swift in Sources */,
+				E8E21B7A2011F0CA003EE6B5 /* SwipeTableViewController.swift in Sources */,
 				E8E21B76200E4C27003EE6B5 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

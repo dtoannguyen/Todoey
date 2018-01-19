@@ -16,7 +16,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        print(Realm.Configuration.defaultConfiguration.fileURL)
+        
+        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
+        
+        let defaults = UserDefaults.standard
+        let beenLaunchedBefore = defaults.bool(forKey: "launchedBefore")
+        if beenLaunchedBefore == true {
+            print("App has been launched before")
+        } else {
+            print("First time launch")
+            defaults.set(true, forKey: "launchedBefore")
+            defaults.set(true, forKey: "listIsEmpty")
+        }
+//        print(Realm.Configuration.defaultConfiguration.fileURL)
         // Override point for customization after application launch.
 
         do {
