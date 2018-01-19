@@ -16,6 +16,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 80.0
         print("listIsEmpty is: \(defaults.bool(forKey: listIsEmpty))")
     }
     
@@ -68,7 +69,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     }
     
     func updateModel(at indexPath: IndexPath) {
-        //Update our data model
+        //Update our data model by overriding this method in CategoryVC/ToDoListVC
     }
 
 }

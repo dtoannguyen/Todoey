@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class CategoryViewController: SwipeTableViewController {
+class CategoryViewController: SwipeTableViewController, ChangedController {
     
     // MARK: - Declare Properties
     
@@ -23,10 +23,10 @@ class CategoryViewController: SwipeTableViewController {
 //        print("viewDidLoad 1 is called")
         loadCategory()
 //        print("viewDidLoad 2 is called")
-        tableView.rowHeight = 80.0
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
+    
 
     // MARK: - TableView DataSource Methods
     
@@ -66,6 +66,7 @@ class CategoryViewController: SwipeTableViewController {
         let destinationVC = segue.destination as! ToDoListViewController
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedCategory = categories?[indexPath.row]
+            destinationVC.delegate = self
         }
     }
     
@@ -94,7 +95,7 @@ class CategoryViewController: SwipeTableViewController {
     }
     
     // MARK: - Database Methods
-    
+    // Save Items
     func save(category: Category) {
         do {
             try realm.write {
@@ -108,12 +109,14 @@ class CategoryViewController: SwipeTableViewController {
         
     }
     
+    // Load Items
     func loadCategory() {
         print("Loading Categories from realm")
         categories = realm.objects(Category.self).sorted(byKeyPath: "dateAdded", ascending: true)
         tableView.reloadData()
     }
     
+    // Delete Items
     override func updateModel(at indexPath: IndexPath) {
         if let category = self.categories?[indexPath.row] {
             do {
@@ -127,5 +130,16 @@ class CategoryViewController: SwipeTableViewController {
         }
     }
 
+    func backToCategoryVC() {
+        print("Delegation success")
+        if categories?.isEmpty == true {
+            self.defaults.set(true, forKey: self.listIsEmpty)
+            print("List in categoryVC is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
+        } else {
+            self.defaults.set(false, forKey: self.listIsEmpty)
+            print("List in categoryVC is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
+        }
+    }
+    
 }
 

@@ -9,11 +9,16 @@
 import UIKit
 import RealmSwift
 
-class ToDoListViewController: UITableViewController {
+protocol ChangedController {
+    func backToCategoryVC()
+}
+
+class ToDoListViewController: SwipeTableViewController {
     
     //MARK: - Declare Properties
     
     @IBOutlet weak var searchBar: UISearchBar!
+    var delegate: ChangedController?
     var toDoItems: Results<Item>?
     let realm = try! Realm()
     var selectedCategory: Category? {
@@ -27,8 +32,19 @@ class ToDoListViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         searchBar.delegate = self
-        tableView.rowHeight = 80.0
         navigationItem.largeTitleDisplayMode = .never
+        if toDoItems?.count == 0 {
+            defaults.set(true, forKey: listIsEmpty)
+            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
+        } else {
+            defaults.set(false, forKey: listIsEmpty)
+            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        delegate?.backToCategoryVC()
     }
 
     //MARK: - TableView Datasource Methods / numberOfRowsInSelection, cellForRow
@@ -41,7 +57,7 @@ class ToDoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if toDoItems?.isEmpty == true {
             cell.textLabel?.text = "No items added yet."
         } else {
@@ -54,27 +70,6 @@ class ToDoListViewController: UITableViewController {
             }
         }
         return cell
-    }
-        
-    //MARK: - Swipe Cell Methods
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-            
-            if let item = self.toDoItems?[indexPath.row] {
-                do {
-                    try self.realm.write {
-                        self.realm.delete(item)
-                    }
-                    print("Item deleted")
-                    completionHandler(true)
-                    self.tableView.reloadData()
-                } catch {
-                    print("Could not delete item")
-                }
-            }
-        }
-        delete.image = UIImage(named: "trash-icon")
-        return UISwipeActionsConfiguration(actions: [delete])
     }
     
     //MARK: - TableView Delegate Methods / DidSelectRow
@@ -109,6 +104,8 @@ class ToDoListViewController: UITableViewController {
                         newItem.title = textfield.text!
                         print(textfield.text!)
                         currentCategory.items.append(newItem)
+                        self.defaults.set(false, forKey: self.listIsEmpty)
+                        print("List in ToDoListVC is: \(self.defaults.bool(forKey: self.listIsEmpty))")
                     }
                 } catch {
                     print("Error saving context: \(error)")
@@ -135,6 +132,21 @@ class ToDoListViewController: UITableViewController {
     func loadItems() {
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "dateAdded", ascending: true)
         tableView.reloadData()
+    }
+    
+    //Delete items
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = self.toDoItems?[indexPath.row] {
+            do {
+                print("\(item.title) deleted")
+                try self.realm.write {
+                    self.realm.delete(item)
+                }
+            } catch {
+                print("Could not delete item")
+            }
+        }
     }
 
 }
