@@ -99,6 +99,8 @@ class ToDoListViewController: SwipeTableViewController {
                     cell.backgroundColor = color.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
                     print((CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
                     cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+                    //Changeing color of accessoryType (.checkmark)
+                    cell.tintColor = ContrastColorOf(color, returnFlat: true)
                 }
             } else {
                 cell.textLabel?.text = "No items added"
