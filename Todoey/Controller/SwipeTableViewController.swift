@@ -17,6 +17,9 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 80.0
+        tableView.separatorStyle = .none
+        //Removes hairline/shadow of navigation bar
+        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         print("listIsEmpty is: \(defaults.bool(forKey: listIsEmpty))")
     }
     
@@ -52,12 +55,14 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
                 
                 // Coordinate table view update animations
                 self.tableView.beginUpdates()
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
                 if self.tableView.numberOfRows(inSection: 0) == 1 {
                     tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .right)
                     self.defaults.set(true, forKey: self.listIsEmpty)
                     print("List is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
                     print("List is now empty")
                 }
+                
                 action.fulfill(with: .delete)
                 self.tableView.endUpdates()
             }

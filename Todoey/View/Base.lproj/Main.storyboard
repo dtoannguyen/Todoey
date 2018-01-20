@@ -37,9 +37,8 @@
                             <outlet property="delegate" destination="5Wg-pI-7Nh" id="g5j-fC-mfj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Items" id="raf-c5-Sdg">
+                    <navigationItem key="navigationItem" title="Items" largeTitleDisplayMode="never" id="raf-c5-Sdg">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="hpX-G4-MKh">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="addButtonPresed:" destination="5Wg-pI-7Nh" id="nPT-7V-vFe"/>
                             </connections>
@@ -78,7 +77,6 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Todoey" largeTitleDisplayMode="always" id="A9o-mv-WQk">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="MbS-qo-RoJ">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="uuY-fs-e1m" id="VOP-sX-3ct"/>
                             </connections>
@@ -97,14 +95,11 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" id="Vrw-oC-sTn" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="xB3-Kt-Qo3">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="xB3-Kt-Qo3">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" red="0.0" green="0.71453946830000004" blue="0.97927886249999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </textAttributes>
+                        <color key="barTintColor" red="0.0" green="0.71372549019607845" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

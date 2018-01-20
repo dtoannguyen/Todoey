@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController, ChangedController {
     
@@ -25,6 +26,7 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
 //        print("viewDidLoad 2 is called")
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
 
@@ -44,10 +46,19 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
 //        print("cellForRow Method is called")
         if categories?.isEmpty == true {
+            print("Setting cell for empty categories")
             cell.textLabel?.text = "No categories added yet."
+            cell.accessoryType = .none
+            cell.textLabel?.textColor = UIColor.black
+            cell.backgroundColor = UIColor.white
         } else {
+            print("Setting cell for category with color")
             cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet."
             cell.accessoryType = .disclosureIndicator
+            if let color = UIColor(hexString: (categories?[indexPath.row].color) ?? "00B6FA") {
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
         }
         return cell
     }
@@ -59,6 +70,7 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
             tableView.deselectRow(at: indexPath, animated: true)
         } else {
             performSegue(withIdentifier: "goToItems", sender: self)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
     
@@ -75,11 +87,13 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textfield = UITextField()
         
-        let alert = UIAlertController(title: "Add a new category", message: "Please type in your new category", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add a new category", message: "", preferredStyle: .alert)
         
-        let createNewCategory = UIAlertAction(title: "Add", style: .default) { (button) in
+        let createNewCategory = UIAlertAction(title: "Add Category", style: .default) { (button) in
             let newCategory = Category()
             newCategory.name = textfield.text!
+            newCategory.color = UIColor.randomFlat.hexValue()
+            print("Setting color for new category: \(newCategory.color)")
             self.save(category: newCategory)
             self.defaults.set(false, forKey: self.listIsEmpty)
             print("List is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
@@ -89,6 +103,7 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
         alert.addAction(createNewCategory)
         
         alert.addTextField { (closureTextfield) in
+            closureTextfield.placeholder = "Add New Category"
             textfield = closureTextfield
         }
         present(alert, animated: true, completion: nil)

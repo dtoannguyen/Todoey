@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.set(true, forKey: "launchedBefore")
             defaults.set(true, forKey: "listIsEmpty")
         }
-//        print(Realm.Configuration.defaultConfiguration.fileURL)
+        print(Realm.Configuration.defaultConfiguration.fileURL)
         // Override point for customization after application launch.
 
         // Setting up realm

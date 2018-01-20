@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 protocol ChangedController {
     func backToCategoryVC()
@@ -32,7 +33,7 @@ class ToDoListViewController: SwipeTableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         searchBar.delegate = self
-        navigationItem.largeTitleDisplayMode = .never
+        
         if toDoItems?.count == 0 {
             defaults.set(true, forKey: listIsEmpty)
             print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
@@ -42,11 +43,37 @@ class ToDoListViewController: SwipeTableViewController {
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
+    override func viewWillAppear(_ animated: Bool) {
+        title = selectedCategory?.name
+        navigationItem.largeTitleDisplayMode = .never
+        guard let categoryColor = selectedCategory?.color else {fatalError()}
+        updateNavBar(withHexCode: categoryColor)
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = UIColor(hexString: categoryColor)?.cgColor
+        searchBar.barTintColor = UIColor(hexString: categoryColor)
+    }
+    
+//    override func viewWillDisappear(_ animated: Bool) {
+//        let originalNavBarColor = "00B6FA"
+//        updateNavBar(withHexCode: originalNavBarColor)
+//    }
+    
+    override func willMove(toParentViewController parent: UIViewController?) {
+        let originalNavBarColor = "00B6FA"
+        updateNavBar(withHexCode: originalNavBarColor)
         delegate?.backToCategoryVC()
     }
 
+    // MARK: - Nav Bar Setup Methods
+    func updateNavBar(withHexCode colorHexCode: String) {
+        guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.") }
+        guard let navBarColor = UIColor(hexString: colorHexCode) else { fatalError("Not a correct HexCode.") }
+        navBar.barTintColor = navBarColor
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+    }
+    
     //MARK: - TableView Datasource Methods / numberOfRowsInSelection, cellForRow
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rows = toDoItems?.count ?? 1
@@ -60,11 +87,19 @@ class ToDoListViewController: SwipeTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if toDoItems?.isEmpty == true {
             cell.textLabel?.text = "No items added yet."
+            cell.accessoryType = .none
+            cell.textLabel?.textColor = UIColor.black
+            cell.backgroundColor = UIColor.white
         } else {
             if let item = toDoItems?[indexPath.row] {
                 cell.textLabel?.text = item.title
                 //Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
                 cell.accessoryType = item.done ? .checkmark : .none
+                if let color = navigationController?.navigationBar.barTintColor {
+                    cell.backgroundColor = color.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
+                    print((CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
+                    cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+                }
             } else {
                 cell.textLabel?.text = "No items added"
             }
@@ -116,7 +151,7 @@ class ToDoListViewController: SwipeTableViewController {
         
         //Textfield
         alert.addTextField { (alertTextfield) in
-            alertTextfield.placeholder = "Create new item"
+            alertTextfield.placeholder = "Add New Item"
             textfield = alertTextfield
         }
         
