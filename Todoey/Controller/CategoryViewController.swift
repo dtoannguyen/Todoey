@@ -110,6 +110,7 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
     }
     
     // MARK: - Database Methods
+    
     // Save Items
     func save(category: Category) {
         do {

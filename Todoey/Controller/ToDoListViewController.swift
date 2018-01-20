@@ -16,7 +16,7 @@ protocol ChangedController {
 
 class ToDoListViewController: SwipeTableViewController {
     
-    //MARK: - Declare Properties
+    // MARK: - Declare Properties
     
     @IBOutlet weak var searchBar: UISearchBar!
     var delegate: ChangedController?
@@ -29,6 +29,8 @@ class ToDoListViewController: SwipeTableViewController {
         }
     }
     
+    // MARK: - View Cycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -36,10 +38,10 @@ class ToDoListViewController: SwipeTableViewController {
         
         if toDoItems?.count == 0 {
             defaults.set(true, forKey: listIsEmpty)
-            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
+//            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
         } else {
             defaults.set(false, forKey: listIsEmpty)
-            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
+//            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
         }
     }
     
@@ -53,11 +55,6 @@ class ToDoListViewController: SwipeTableViewController {
         searchBar.barTintColor = UIColor(hexString: categoryColor)
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        let originalNavBarColor = "00B6FA"
-//        updateNavBar(withHexCode: originalNavBarColor)
-//    }
-    
     override func willMove(toParentViewController parent: UIViewController?) {
         let originalNavBarColor = "00B6FA"
         updateNavBar(withHexCode: originalNavBarColor)
@@ -65,6 +62,7 @@ class ToDoListViewController: SwipeTableViewController {
     }
 
     // MARK: - Nav Bar Setup Methods
+    
     func updateNavBar(withHexCode colorHexCode: String) {
         guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.") }
         guard let navBarColor = UIColor(hexString: colorHexCode) else { fatalError("Not a correct HexCode.") }
@@ -74,7 +72,8 @@ class ToDoListViewController: SwipeTableViewController {
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
     }
     
-    //MARK: - TableView Datasource Methods / numberOfRowsInSelection, cellForRow
+    // MARK: - TableView Datasource Methods / numberOfRows, cellForRow
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rows = toDoItems?.count ?? 1
         if toDoItems?.isEmpty == true {
@@ -93,13 +92,13 @@ class ToDoListViewController: SwipeTableViewController {
         } else {
             if let item = toDoItems?[indexPath.row] {
                 cell.textLabel?.text = item.title
-                //Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
+                // Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
                 cell.accessoryType = item.done ? .checkmark : .none
                 if let color = navigationController?.navigationBar.barTintColor {
                     cell.backgroundColor = color.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
                     print((CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
                     cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
-                    //Changeing color of accessoryType (.checkmark)
+                    // Changeing color of accessoryType (.checkmark)
                     cell.tintColor = ContrastColorOf(color, returnFlat: true)
                 }
             } else {
@@ -109,7 +108,8 @@ class ToDoListViewController: SwipeTableViewController {
         return cell
     }
     
-    //MARK: - TableView Delegate Methods / DidSelectRow
+    // MARK: - TableView Delegate Methods / DidSelectRow
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = toDoItems?[indexPath.row] {
             do {
@@ -124,25 +124,26 @@ class ToDoListViewController: SwipeTableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    //MARK: - Add new items to itemArray
+    // MARK: - Add new items to list
+    
     @IBAction func addButtonPresed(_ sender: UIBarButtonItem) {
         var textfield = UITextField()
         
-        //"Declare" PopUp
+        // "Declare" PopUp
         let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
-        //"Declare" Button and Add Textfield Input to List
+        // "Declare" Button and Add Textfield Input to List
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
             if let currentCategory = self.selectedCategory {
                 do {
-                    //Save new item to realm
+                    // Save new item to realm
                     try self.realm.write {
                         let newItem = Item()
                         newItem.title = textfield.text!
-                        print(textfield.text!)
+//                        print(textfield.text!)
                         currentCategory.items.append(newItem)
                         self.defaults.set(false, forKey: self.listIsEmpty)
-                        print("List in ToDoListVC is: \(self.defaults.bool(forKey: self.listIsEmpty))")
+//                        print("List in ToDoListVC is: \(self.defaults.bool(forKey: self.listIsEmpty))")
                     }
                 } catch {
                     print("Error saving context: \(error)")
@@ -151,28 +152,27 @@ class ToDoListViewController: SwipeTableViewController {
             self.tableView.reloadData()
         }
         
-        //Textfield
+        // Add Textfield to PopUp
         alert.addTextField { (alertTextfield) in
             alertTextfield.placeholder = "Add New Item"
             textfield = alertTextfield
         }
         
-        //Add Button to PopUp
+        // Add Button to PopUp
         alert.addAction(action)
-        //"Init" PopUp with Button
+        // "Init" PopUp with Button
         present(alert, animated: true, completion: nil)
     }
     
-    //MARK: - Model Manipulation Methods
+    // MARK: - Model Manipulation Methods
 
-    //Load items
+    // Load items
     func loadItems() {
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "dateAdded", ascending: true)
         tableView.reloadData()
     }
     
-    //Delete items
-    
+    // Delete items
     override func updateModel(at indexPath: IndexPath) {
         if let item = self.toDoItems?[indexPath.row] {
             do {
@@ -188,11 +188,11 @@ class ToDoListViewController: SwipeTableViewController {
 
 }
 
-//MARK: - Searchbar Delegate Methods
+// MARK: - Searchbar Delegate Methods
 
 extension ToDoListViewController: UISearchBarDelegate {
 
-    //Add Cancel Button to Search Bar
+    // Add Cancel Button to Search Bar
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
@@ -210,7 +210,7 @@ extension ToDoListViewController: UISearchBarDelegate {
         if let searchInputLength = searchBar.text?.count {
             if searchInputLength == 0 {
                 loadItems()
-                //Searchbar should no longer be the thing that is currently selected
+                // Searchbar should no longer be the thing that is currently selected
                 DispatchQueue.main.async {
                     searchBar.resignFirstResponder()
                 }
