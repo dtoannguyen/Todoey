@@ -102,20 +102,23 @@ class ToDoListViewController: SwipeTableViewController {
     // MARK: - TableView Delegate Methods / DidSelectRow
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         searchBar.endEditing(true)
-        
-        if let item = toDoItems?[indexPath.row] {
-            do {
-                try realm.write {
-                    item.done = !item.done
+        if toDoItems?.isEmpty == true {
+            tableView.deselectRow(at: indexPath, animated: true)
+        } else {
+            if let item = toDoItems?[indexPath.row] {
+                do {
+                    try realm.write {
+                        item.done = !item.done
+                    }
+                } catch {
+                    print("Error saving done status: ", error)
                 }
-            } catch {
-                print("Error saving done status: ", error)
             }
+            tableView.reloadData()
+            tableView.deselectRow(at: indexPath, animated: true)
         }
-        tableView.reloadData()
-        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     // MARK: - Add new items to list
