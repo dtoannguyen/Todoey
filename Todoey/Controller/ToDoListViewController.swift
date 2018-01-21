@@ -90,20 +90,16 @@ class ToDoListViewController: SwipeTableViewController {
             cell.textLabel?.textColor = UIColor.black
             cell.backgroundColor = UIColor.white
         } else {
-            if let item = toDoItems?[indexPath.row] {
-                cell.textLabel?.text = item.title
-                // Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
-                cell.accessoryType = item.done ? .checkmark : .none
-                if let color = navigationController?.navigationBar.barTintColor {
-                    cell.backgroundColor = color.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
-                    print((CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
-                    cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
-                    // Changeing color of accessoryType (.checkmark)
-                    cell.tintColor = ContrastColorOf(color, returnFlat: true)
-                }
-            } else {
-                cell.textLabel?.text = "No items added"
-            }
+            guard let item = toDoItems?[indexPath.row] else {fatalError("toDoItems is empty")}
+            cell.textLabel?.text = item.title
+            // Ternary Operator: value = condition ? valueOfTrue : valueOfFalse
+            cell.accessoryType = item.done ? .checkmark : .none
+            guard let color = navigationController?.navigationBar.barTintColor else {fatalError("Navigation Controller does not exist")}
+            cell.backgroundColor = color.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
+//            print((CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
+            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            // Changeing color of accessoryType (.checkmark)
+            cell.tintColor = ContrastColorOf(color, returnFlat: true)
         }
         return cell
     }
@@ -133,7 +129,6 @@ class ToDoListViewController: SwipeTableViewController {
         let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         // "Declare" Button and Add Textfield Input to List
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            
             if let currentCategory = self.selectedCategory {
                 do {
                     // Save new item to realm
@@ -151,13 +146,11 @@ class ToDoListViewController: SwipeTableViewController {
             }
             self.tableView.reloadData()
         }
-        
         // Add Textfield to PopUp
         alert.addTextField { (alertTextfield) in
             alertTextfield.placeholder = "Add New Item"
             textfield = alertTextfield
         }
-        
         // Add Button to PopUp
         alert.addAction(action)
         // "Init" PopUp with Button

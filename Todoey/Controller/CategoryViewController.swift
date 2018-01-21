@@ -146,6 +146,7 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
         }
     }
 
+    // Resetting listIsEmpty in userDefaults after returning from ToDoListVC
     func backToCategoryVC() {
         print("Delegation success")
         if categories?.isEmpty == true {

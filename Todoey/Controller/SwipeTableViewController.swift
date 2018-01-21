@@ -33,14 +33,14 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     }
     // MARK: - SwipeCellKit Methods
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
-        print("editActionsOptions Method is called")
+//        print("editActionsOptions Method is called")
         var options = SwipeTableOptions()
         options.expansionStyle = .destructive(automaticallyDelete: false)
         return options
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        print("editActions Method is called")
+//        print("editActions Method is called")
         guard orientation == .right else { return nil }
         
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
@@ -63,7 +63,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
 //                    print("List is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
                     print("List is now empty")
                 }
-                
                 action.fulfill(with: .delete)
                 self.tableView.endUpdates()
             }
