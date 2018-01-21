@@ -48,6 +48,7 @@ class ToDoListViewController: SwipeTableViewController {
         searchBar.layer.borderWidth = 1
         searchBar.layer.borderColor = UIColor(hexString: categoryColor)?.cgColor
         searchBar.barTintColor = UIColor(hexString: categoryColor)
+        searchBar.tintColor = ContrastColorOf(UIColor(hexString: categoryColor)!, returnFlat: true)
     }
     
     override func willMove(toParentViewController parent: UIViewController?) {
@@ -101,6 +102,9 @@ class ToDoListViewController: SwipeTableViewController {
     // MARK: - TableView Delegate Methods / DidSelectRow
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        searchBar.endEditing(true)
+        
         if let item = toDoItems?[indexPath.row] {
             do {
                 try realm.write {
@@ -183,14 +187,18 @@ extension ToDoListViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
-
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
+    // End Text Editing
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
-        loadItems()
         DispatchQueue.main.async {
             searchBar.resignFirstResponder()
         }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        loadItems()
+        searchBar.endEditing(true)
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
