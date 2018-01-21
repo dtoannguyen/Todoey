@@ -10,26 +10,29 @@ import UIKit
 import RealmSwift
 import ChameleonFramework
 
-class CategoryViewController: SwipeTableViewController, ChangedController {
+class CategoryViewController: SwipeTableViewController {
     
     // MARK: - Declare Properties
     
     var categories: Results<Category>?
     let realm = try! Realm()
     
-    // MARK: - Loading Methods
+    // MARK: - View Life Cycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
 //        print("viewDidLoad 1 is called")
         loadCategory()
-        backToCategoryVC()
 //        print("viewDidLoad 2 is called")
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+//        print("ViewWillAppear")
+        resetListIsEmpty()
+    }
 
     // MARK: - TableView DataSource Methods
     
@@ -79,7 +82,6 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
         let destinationVC = segue.destination as! ToDoListViewController
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedCategory = categories?[indexPath.row]
-            destinationVC.delegate = self
         }
     }
     
@@ -148,8 +150,8 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
     }
 
     // Resetting listIsEmpty in userDefaults after returning from ToDoListVC
-    func backToCategoryVC() {
-        print("Delegation success")
+    func resetListIsEmpty() {
+//        print("Resetting listIsEmpty")
         if categories?.isEmpty == true {
             super.listIsEmpty = true
             print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")

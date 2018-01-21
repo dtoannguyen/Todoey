@@ -10,16 +10,11 @@ import UIKit
 import RealmSwift
 import ChameleonFramework
 
-protocol ChangedController {
-    func backToCategoryVC()
-}
-
 class ToDoListViewController: SwipeTableViewController {
     
     // MARK: - Declare Properties
     
     @IBOutlet weak var searchBar: UISearchBar!
-    var delegate: ChangedController?
     var toDoItems: Results<Item>?
     let realm = try! Realm()
     var selectedCategory: Category? {
@@ -29,7 +24,7 @@ class ToDoListViewController: SwipeTableViewController {
         }
     }
     
-    // MARK: - View Cycles
+    // MARK: - View Life Cycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +53,6 @@ class ToDoListViewController: SwipeTableViewController {
     override func willMove(toParentViewController parent: UIViewController?) {
         let originalNavBarColor = "00B6FA"
         updateNavBar(withHexCode: originalNavBarColor)
-        delegate?.backToCategoryVC()
     }
 
     // MARK: - Nav Bar Setup Methods
