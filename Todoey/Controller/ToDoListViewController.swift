@@ -37,11 +37,11 @@ class ToDoListViewController: SwipeTableViewController {
         searchBar.delegate = self
         
         if toDoItems?.count == 0 {
-            defaults.set(true, forKey: listIsEmpty)
-//            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
+            super.listIsEmpty = true
+            print("List in ToDoListVC is: \(String(describing: super.listIsEmpty))")
         } else {
-            defaults.set(false, forKey: listIsEmpty)
-//            print("List in ToDoListVC is: \(defaults.bool(forKey: listIsEmpty))")
+            super.listIsEmpty = false
+            print("List in ToDoListVC is: \(String(describing: super.listIsEmpty))")
         }
     }
     
@@ -98,7 +98,7 @@ class ToDoListViewController: SwipeTableViewController {
             cell.backgroundColor = color.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
 //            print((CGFloat(indexPath.row) / CGFloat(toDoItems!.count)) * 0.35)
             cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
-            // Changeing color of accessoryType (.checkmark)
+            // Changing color of accessoryType (.checkmark)
             cell.tintColor = ContrastColorOf(color, returnFlat: true)
         }
         return cell
@@ -137,8 +137,8 @@ class ToDoListViewController: SwipeTableViewController {
                         newItem.title = textfield.text!
 //                        print(textfield.text!)
                         currentCategory.items.append(newItem)
-                        self.defaults.set(false, forKey: self.listIsEmpty)
-//                        print("List in ToDoListVC is: \(self.defaults.bool(forKey: self.listIsEmpty))")
+                        super.listIsEmpty = false
+                        print("List in ToDoListVC is: \(String(describing: super.listIsEmpty))")
                     }
                 } catch {
                     print("Error saving context: \(error)")

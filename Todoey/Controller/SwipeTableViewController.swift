@@ -11,8 +11,7 @@ import SwipeCellKit
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
     
-    let defaults = UserDefaults.standard
-    let listIsEmpty = "listIsEmpty"
+    var listIsEmpty: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +19,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         tableView.separatorStyle = .none
         // Removes hairline/shadow of navigation bar
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
-        print("listIsEmpty is: \(defaults.bool(forKey: listIsEmpty))")
     }
     
     // MARK: - TableView DataSource Methods
@@ -44,13 +42,13 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         guard orientation == .right else { return nil }
         
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            if self.tableView.numberOfRows(inSection: 0) == 1 && self.defaults.bool(forKey: self.listIsEmpty) == true {
-//                print("number of rows = 1 & listIsEmpty = true")
+            if self.tableView.numberOfRows(inSection: 0) == 1 && self.listIsEmpty == true {
+                print("number of rows = 1 & listIsEmpty = true")
                 self.tableView.beginUpdates()
                 action.fulfill(with: .reset)
                 self.tableView.endUpdates()
             } else {
-//                print("number of rows != 1 oder listIsEmpty = false")
+                print("number of rows != 1 oder listIsEmpty = false")
                 // Update model
                 self.updateModel(at: indexPath)
                 
@@ -59,8 +57,8 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
                 if self.tableView.numberOfRows(inSection: 0) == 1 {
                     tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .right)
-                    self.defaults.set(true, forKey: self.listIsEmpty)
-//                    print("List is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
+                    self.listIsEmpty = true
+                    print("List is empty: \(String(describing: self.listIsEmpty))")
                     print("List is now empty")
                 }
                 action.fulfill(with: .delete)
@@ -68,8 +66,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
             }
         }
         deleteAction.image = UIImage(named: "trash-icon")
-//        print("List is empty: ", defaults.bool(forKey: listIsEmpty))
-//        print("Number of rows: ",tableView.numberOfRows(inSection: 0))
         return [deleteAction]
     }
     

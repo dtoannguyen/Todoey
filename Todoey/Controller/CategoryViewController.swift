@@ -23,6 +23,7 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
         super.viewDidLoad()
 //        print("viewDidLoad 1 is called")
         loadCategory()
+        backToCategoryVC()
 //        print("viewDidLoad 2 is called")
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
@@ -95,8 +96,8 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
             newCategory.color = UIColor.randomFlat.hexValue()
             print("Setting color for new category: \(newCategory.color)")
             self.save(category: newCategory)
-            self.defaults.set(false, forKey: self.listIsEmpty)
-            print("List is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
+            super.listIsEmpty = false
+            print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")
             print("Added \(newCategory.name) to list")
         }
         
@@ -150,11 +151,11 @@ class CategoryViewController: SwipeTableViewController, ChangedController {
     func backToCategoryVC() {
         print("Delegation success")
         if categories?.isEmpty == true {
-            self.defaults.set(true, forKey: self.listIsEmpty)
-            print("List in categoryVC is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
+            super.listIsEmpty = true
+            print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")
         } else {
-            self.defaults.set(false, forKey: self.listIsEmpty)
-            print("List in categoryVC is empty: ", self.defaults.bool(forKey: self.listIsEmpty))
+            super.listIsEmpty = false
+            print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")
         }
     }
     
