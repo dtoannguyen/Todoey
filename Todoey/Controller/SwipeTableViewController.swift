@@ -18,7 +18,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
         // Removes hairline/shadow of navigation bar
-        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        navigationController?.hidesNavigationBarHairline = true
     }
     
     // MARK: - TableView DataSource Methods
@@ -40,14 +40,10 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
 //        print("editActions Method is called")
         guard orientation == .right else { return nil }
-        
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            if self.tableView.numberOfRows(inSection: 0) == 1 && self.listIsEmpty == true {
-                print("number of rows = 1 & listIsEmpty = true")
-                self.tableView.beginUpdates()
-                action.fulfill(with: .reset)
-                self.tableView.endUpdates()
-            } else {
+        if listIsEmpty == true {
+            return []
+        } else {
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
                 print("number of rows != 1 oder listIsEmpty = false")
                 // Update model
                 self.updateModel(at: indexPath)
@@ -55,18 +51,16 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
                 // Coordinate table view update animations
                 self.tableView.beginUpdates()
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                if self.tableView.numberOfRows(inSection: 0) == 1 {
+                if self.listIsEmpty == true {
                     tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .right)
-                    self.listIsEmpty = true
-                    print("List is empty: \(String(describing: self.listIsEmpty))")
                     print("List is now empty")
                 }
                 action.fulfill(with: .delete)
                 self.tableView.endUpdates()
             }
+            deleteAction.image = UIImage(named: "trash-icon")
+            return [deleteAction]
         }
-        deleteAction.image = UIImage(named: "trash-icon")
-        return [deleteAction]
     }
     
     func updateModel(at indexPath: IndexPath) {

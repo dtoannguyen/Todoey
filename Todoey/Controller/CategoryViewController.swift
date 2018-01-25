@@ -28,17 +28,12 @@ class CategoryViewController: SwipeTableViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-//        print("ViewWillAppear")
-        resetListIsEmpty()
-    }
 
     // MARK: - TableView DataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        print("numberOfRows Method is called")
-        //Nil Coalescing Operator: if value = nil then change value to 1
+        // Nil Coalescing Operator: if value = nil then change value to 1
         var rows = categories?.count ?? 1
         if categories?.isEmpty == true {
             rows = 1
@@ -98,8 +93,7 @@ class CategoryViewController: SwipeTableViewController {
             newCategory.color = UIColor.randomFlat.hexValue()
             print("Setting color for new category: \(newCategory.color)")
             self.save(category: newCategory)
-            super.listIsEmpty = false
-            print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")
+            print("List in CategoryVC is: \(String(describing: self.listIsEmpty))")
             print("Added \(newCategory.name) to list")
         }
         
@@ -119,8 +113,9 @@ class CategoryViewController: SwipeTableViewController {
         do {
             try realm.write {
                 realm.add(category)
-                print("Category saved")
             }
+            print("Category saved")
+            listIsEmpty = categories!.isEmpty
         } catch {
             print("Saving category error: \(error)")
         }
@@ -132,6 +127,8 @@ class CategoryViewController: SwipeTableViewController {
     func loadCategory() {
         print("Loading Categories from realm")
         categories = realm.objects(Category.self).sorted(byKeyPath: "dateAdded", ascending: true)
+        listIsEmpty = categories!.isEmpty
+        print("CategoryList is empty: \(String(describing: listIsEmpty))")
         tableView.reloadData()
     }
     
@@ -143,23 +140,12 @@ class CategoryViewController: SwipeTableViewController {
                 try self.realm.write {
                     self.realm.delete(category)
                 }
+                listIsEmpty = categories!.isEmpty
             } catch {
                 print("Could not delete category")
             }
         }
     }
 
-    // Resetting listIsEmpty in userDefaults after returning from ToDoListVC
-    func resetListIsEmpty() {
-//        print("Resetting listIsEmpty")
-        if categories?.isEmpty == true {
-            super.listIsEmpty = true
-            print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")
-        } else {
-            super.listIsEmpty = false
-            print("List in CategoryVC is: \(String(describing: super.listIsEmpty))")
-        }
-    }
-    
 }
 

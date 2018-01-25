@@ -30,14 +30,6 @@ class ToDoListViewController: SwipeTableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         searchBar.delegate = self
-        
-        if toDoItems?.count == 0 {
-            super.listIsEmpty = true
-            print("List in ToDoListVC is: \(String(describing: super.listIsEmpty))")
-        } else {
-            super.listIsEmpty = false
-            print("List in ToDoListVC is: \(String(describing: super.listIsEmpty))")
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -138,8 +130,8 @@ class ToDoListViewController: SwipeTableViewController {
                         newItem.title = textfield.text!
 //                        print(textfield.text!)
                         currentCategory.items.append(newItem)
-                        super.listIsEmpty = false
-                        print("List in ToDoListVC is: \(String(describing: super.listIsEmpty))")
+                        self.listIsEmpty = self.toDoItems?.isEmpty
+                        print("List in ToDoListVC is: \(String(describing: self.listIsEmpty))")
                     }
                 } catch {
                     print("Error saving context: \(error)")
@@ -163,6 +155,8 @@ class ToDoListViewController: SwipeTableViewController {
     // Load items
     func loadItems() {
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "dateAdded", ascending: true)
+        listIsEmpty = toDoItems!.isEmpty
+        print("ToDoList is empty: \(String(describing: listIsEmpty))")
         tableView.reloadData()
     }
     
@@ -174,6 +168,7 @@ class ToDoListViewController: SwipeTableViewController {
                 try self.realm.write {
                     self.realm.delete(item)
                 }
+                listIsEmpty = toDoItems!.isEmpty
             } catch {
                 print("Could not delete item")
             }
