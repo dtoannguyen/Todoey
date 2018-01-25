@@ -12,6 +12,7 @@ import SwipeCellKit
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
     
     var listIsEmpty: Bool?
+    var placeholderText = "Nothing Added Yet."
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,10 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
 //        print("cellForRow Method is called")
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SwipeTableViewCell
         cell.delegate = self
+        cell.textLabel?.text = placeholderText
+        cell.accessoryType = .none
+        cell.textLabel?.textColor = UIColor.black
+        cell.backgroundColor = UIColor.white
         return cell
     }
     // MARK: - SwipeCellKit Methods

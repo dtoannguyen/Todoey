@@ -21,6 +21,7 @@ class CategoryViewController: SwipeTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        placeholderText = "No Categories Added Yet."
 //        print("viewDidLoad 1 is called")
         loadCategory()
 //        print("viewDidLoad 2 is called")
@@ -46,10 +47,7 @@ class CategoryViewController: SwipeTableViewController {
 //        print("cellForRow Method is called")
         if categories?.isEmpty == true {
             print("Setting cell for empty categories")
-            cell.textLabel?.text = "No categories added yet."
-            cell.accessoryType = .none
-            cell.textLabel?.textColor = UIColor.black
-            cell.backgroundColor = UIColor.white
+            return cell
         } else {
             print("Setting cell for category with color")
             cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet."
@@ -58,8 +56,9 @@ class CategoryViewController: SwipeTableViewController {
                 cell.backgroundColor = color
                 cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
             }
+             return cell
         }
-        return cell
+       
     }
     
     // MARK: - TableView Delegate Methods

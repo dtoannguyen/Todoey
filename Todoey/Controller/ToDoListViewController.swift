@@ -28,7 +28,7 @@ class ToDoListViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        placeholderText = "No Items Added Yet."
         searchBar.delegate = self
     }
     
@@ -55,7 +55,6 @@ class ToDoListViewController: SwipeTableViewController {
         guard let navBarColor = UIColor(hexString: colorHexCode) else { fatalError("Not a correct HexCode.") }
         navBar.barTintColor = navBarColor
         navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
-        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
     }
     
@@ -72,10 +71,7 @@ class ToDoListViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if toDoItems?.isEmpty == true {
-            cell.textLabel?.text = "No items added yet."
-            cell.accessoryType = .none
-            cell.textLabel?.textColor = UIColor.black
-            cell.backgroundColor = UIColor.white
+           return cell
         } else {
             guard let item = toDoItems?[indexPath.row] else {fatalError("toDoItems is empty")}
             cell.textLabel?.text = item.title
@@ -87,8 +83,8 @@ class ToDoListViewController: SwipeTableViewController {
             cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
             // Changing color of accessoryType (.checkmark)
             cell.tintColor = ContrastColorOf(color, returnFlat: true)
+            return cell
         }
-        return cell
     }
     
     // MARK: - TableView Delegate Methods / DidSelectRow
